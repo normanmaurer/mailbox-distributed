@@ -1,0 +1,7 @@
+This project contains helper classes which make it easy to support clustering for 
+Apache James Mailbox (http://james.apache.org/mailbox) implementations. 
+
+This is done by using hazelcast for all the distribution operations.
+
+By using this classes it should be really straight forward to build an Apache James
+Server cluster. (http://james.apache.org/server)
