@@ -36,14 +36,17 @@ import com.hazelcast.core.Hazelcast;
  */
 public class HazelcastDelegatingMailboxListener extends AbstractDelegatingMailboxListener {
 
+    private final static String MAILBOX_LISTENERS = "mailboxListeners";
+    private final static String GLOBAL_MAILBOX_LISTENERS = "globalMailboxListeners";
+
     @Override
     protected Map<MailboxPath, List<MailboxListener>> getListeners() {
-        return Hazelcast.getMap("mailboxListeners");
+        return Hazelcast.getMap(MAILBOX_LISTENERS);
     }
 
     @Override
     protected List<MailboxListener> getGlobalListeners() {
-        return Hazelcast.getList("globalMailboxListeners");
+        return Hazelcast.getList(GLOBAL_MAILBOX_LISTENERS);
     }
 
 }
