@@ -19,14 +19,12 @@
 
 package me.normanmaurer.mailbox.hazelcast;
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.james.mailbox.MailboxListener;
-import org.apache.james.mailbox.MailboxPath;
-import org.apache.james.mailbox.store.AbstractDelegatingMailboxListener;
+import org.apache.james.mailbox.store.HashMapDelegatingMailboxListener;
 
 import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.ITopic;
+import com.hazelcast.core.MessageListener;
 
 /**
  * Use Hazelcast for distributed storage of {@link MailboxListener}
@@ -34,19 +32,25 @@ import com.hazelcast.core.Hazelcast;
  * @author Norman Maurer
  *
  */
-public class HazelcastDelegatingMailboxListener extends AbstractDelegatingMailboxListener {
+public class HazelcastDelegatingMailboxListener extends HashMapDelegatingMailboxListener implements MessageListener<org.apache.james.mailbox.MailboxListener.Event>{
 
-    private final static String MAILBOX_LISTENERS = "mailboxListeners";
-    private final static String GLOBAL_MAILBOX_LISTENERS = "globalMailboxListeners";
-
+    private final static String MAILBOX_EVENT_TOPIC = "MAILBOX_EVENT_TOPIC";
+    
+    private ITopic<Event> eventTopic = Hazelcast.getTopic(MAILBOX_EVENT_TOPIC);
+    
+    public HazelcastDelegatingMailboxListener() {
+        eventTopic.addMessageListener(this);
+    }
     @Override
-    protected Map<MailboxPath, List<MailboxListener>> getListeners() {
-        return Hazelcast.getMap(MAILBOX_LISTENERS);
+    public void event(Event event) {
+        eventTopic.publish(event);
+
+    }
+    @Override
+    public void onMessage(org.apache.james.mailbox.MailboxListener.Event  event) {
+        super.event(event);
+          
     }
 
-    @Override
-    protected List<MailboxListener> getGlobalListeners() {
-        return Hazelcast.getList(GLOBAL_MAILBOX_LISTENERS);
-    }
 
 }

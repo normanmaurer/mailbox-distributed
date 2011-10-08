@@ -41,7 +41,7 @@ public class HazelcastMailboxPathLocker extends AbstractMailboxPathLocker{
      * @see org.apache.james.mailbox.store.AbstractMailboxPathLocker#lock(org.apache.james.mailbox.MailboxSession, org.apache.james.mailbox.MailboxPath)
      */
     protected void lock(MailboxSession session, MailboxPath path) throws MailboxException {
-        Lock lock = Hazelcast.getLock(path.toString());
+        Lock lock = Hazelcast.getLock(path.getFullName(session.getPathDelimiter()));
         lock.lock();        
     }
 
@@ -50,7 +50,7 @@ public class HazelcastMailboxPathLocker extends AbstractMailboxPathLocker{
      * @see org.apache.james.mailbox.store.AbstractMailboxPathLocker#unlock(org.apache.james.mailbox.MailboxSession, org.apache.james.mailbox.MailboxPath)
      */
     protected void unlock(MailboxSession session, MailboxPath path) throws MailboxException {
-        Lock lock = Hazelcast.getLock(path.toString());
+        Lock lock = Hazelcast.getLock(path.getFullName(session.getPathDelimiter()));
         lock.unlock();
     }
 
