@@ -18,23 +18,32 @@
   under the License.    
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>apache-james-mailbox</artifactId>
-    <groupId>org.apache.james</groupId>
-    <version>0.3</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.james</groupId>
+  <groupId>me.normanmaurer</groupId>
   <artifactId>apache-james-mailbox-distributed</artifactId>
-  <name>Apache James Distributed Mailbox Helpers</name>
+  <name>James Distributed Mailbox Helpers</name>
+  <version>0.1-SNAPSHOT</version>
+  <repositories>
+    <repository>
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://repository.apache.org/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.james</groupId>
       <artifactId>apache-james-mailbox-api</artifactId>
+      <version>0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.james</groupId>
       <artifactId>apache-james-mailbox-store</artifactId>
+      <version>0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.hazelcast</groupId>

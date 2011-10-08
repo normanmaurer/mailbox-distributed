@@ -16,44 +16,27 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
+
 package me.normanmaurer.mailbox.hazelcast;
 
-import java.util.concurrent.locks.Lock;
-
-import org.apache.james.mailbox.MailboxException;
-import org.apache.james.mailbox.MailboxPath;
-import org.apache.james.mailbox.MailboxSession;
-import org.apache.james.mailbox.store.AbstractMailboxPathLocker;
+import org.apache.james.mailbox.store.AbstractMailboxSessionIdGenerator;
 
 import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.IdGenerator;
+
 
 /**
- * Use Hazelcast for a distributed Lock. The {@link MailboxPath#getFullName(char)} is used as key
+ * {@link AbstractMailboxSessionIdGenerator} which uses Hazelcast to generate the ids
  * 
  * @author Norman Maurer
  *
  */
-public class HazelcastMailboxPathLocker extends AbstractMailboxPathLocker{
-
-
-    private void lock(MailboxSession session, MailboxPath path) throws MailboxException {
-        Lock lock = Hazelcast.getLock(path.getFullName(session.getPathDelimiter()));
-        lock.lock();        
-    }
-
-    private void unlock(MailboxSession session, MailboxPath path) throws MailboxException {
-        Lock lock = Hazelcast.getLock(path.getFullName(session.getPathDelimiter()));
-        lock.unlock();
-    }
+public class HazelcastMailboxSessionIdGenerator extends AbstractMailboxSessionIdGenerator{
+    private final static String MAILBOX_SESSION_ID_GENERATOR ="MAILBOX_SESSION_ID_GENERATOR";
+    private final IdGenerator idGenerator = Hazelcast.getIdGenerator(MAILBOX_SESSION_ID_GENERATOR);
 
     @Override
-    protected void lock(MailboxSession session, MailboxPath path, boolean writeLock) throws MailboxException {
-        lock(session, path);
+    protected long generateNextId() {
+        return idGenerator.newId();
     }
-
-    @Override
-    protected void unlock(MailboxSession session, MailboxPath path, boolean writeLock) throws MailboxException {
-        unlock(session, path);
-    }
-
 }

@@ -27,7 +27,7 @@ import com.hazelcast.core.ITopic;
 import com.hazelcast.core.MessageListener;
 
 /**
- * Use Hazelcast for distributed storage of {@link MailboxListener}
+ * Use Hazelcast to dispatch {@link Event}'s to an {@link ITopic} and listen for events and notify the registered {@link MailboxListener} instances
  * 
  * @author Norman Maurer
  *
